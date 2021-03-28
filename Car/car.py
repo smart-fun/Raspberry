@@ -1,0 +1,20 @@
+from time import sleep
+#!/usr/bin/python
+from controller import *
+from mcp4728 import *
+
+displayDebug = False
+
+#mcp = MCP4728()
+#mcp.init()
+controller = Controller()
+if not controller.select():
+    print("Controller not compatible")
+else:
+    while True:
+        controller.update(displayDebug)
+        speed = controller.getSpeed()
+        wheel = controller.getWheel()
+        print("speed",speed,"wheel",wheel)
+        #mcp.update(speed, wheel)
+        sleep(0.05)
