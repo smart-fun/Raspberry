@@ -5,16 +5,71 @@ def getMapping(controllerName):
     if controllerName == "Sony Computer Entertainment Wireless Controller":
         return PS4Mapping()
 
-# functions return button code, type, min value, max value
 class Mapping:
-    def getBreakButton(self):
-        pass
-    def getAccelerateButton(self):
-        pass
-    def getDirectionButton(self):
-        pass
+    
+    BTN_L1 = "L1"
+    BTN_L2 = "L2"
+    BTN_L3 = "L3"
+    BTN_L3_H = "L3_H"
+    BTN_L3_V = "L3_V"
+    BTN_R1 = "R1"
+    BTN_R2 = "R2"
+    BTN_R3 = "R3"
+    BTN_R3_H = "R3_H"
+    BTN_R3_V = "R3_V"
+    BTN_DPAD_H = "DPAD_H"
+    BTN_DPAD_V = "DPAD_V"
+    BTN_A = "A"
+    BTN_B = "B"
+    BTN_C = "C"
+    BTN_D = "D"
+    BTN_E = "E"
+    BTN_F = "F"
+    BTN_G = "G"
+    mapping = {}
+    
+    def fromCodeAndType(self, evCode, evType): #returns key, values
+        for key in self.mapping.keys():
+            c = self.mapping[key][0]
+            t = self.mapping[key][1]
+            if (self.mapping[key][0] == evCode) and (self.mapping[key][1] == evType):
+                return key, self.mapping[key]
+        return None, None
+    
+    def getNormalizedValue(self, evCode, evType, evValue):
+        key, values = self.fromCodeAndType(evCode, evType)
+        if (key == None):
+            return None, None
+        else:
+            vmin = values[2]
+            vmax = values[3]
+            value = int((evValue - vmin) / (vmax - vmin) * 100)
+            return key, value
+   
     
 class XBox360Mapping(Mapping):
+    
+    def __init__(self):
+        self.mapping[self.BTN_L1] = [310,1,0,1]
+        self.mapping[self.BTN_L2] = [2,3,0,255]
+        self.mapping[self.BTN_L3] = [317,1,0,1]
+        self.mapping[self.BTN_L3_H] = [0,3,-32768,32767]
+        self.mapping[self.BTN_L3_V] = [1,3,-32768,32767]
+        self.mapping[self.BTN_R1] = [311,1,0,1]
+        self.mapping[self.BTN_R2] = [5,3,0,255]
+        self.mapping[self.BTN_R3] = [318,1,0,1]
+        self.mapping[self.BTN_R3_H] = [3,3,-32768,32767]
+        self.mapping[self.BTN_R3_V] = [4,3,-32768,32767]
+        self.mapping[self.BTN_DPAD_H] = [16,3,-1,1]
+        self.mapping[self.BTN_DPAD_V] = [17,3,-1,1]
+        self.mapping[self.BTN_A] = [304,1,0,1]
+        self.mapping[self.BTN_B] = [305,1,0,1]
+        self.mapping[self.BTN_C] = [307,1,0,1]
+        self.mapping[self.BTN_D] = [308,1,0,1]
+        self.mapping[self.BTN_E] = [314,1,0,1]
+        self.mapping[self.BTN_F] = [315,1,0,1]
+        self.mapping[self.BTN_G] = [316,1,0,1]
+    
     def getBreakButton(self):
         return [2,3,0,255]
     def getAccelerateButton(self):
@@ -22,56 +77,26 @@ class XBox360Mapping(Mapping):
     def getDirectionButton(self):
         return [0,3,-32768,32767]
     
-'''
-"Microsoft X-Box 360 pad" mapping
-
-0 T3: Left Stick H (-32768 - +32767)
-1 T3: Left Stick V (-32768 - +32767)
-2 T3: L2 (0-255)
-3 T3: Right Stick H (-32768 - +32768)
-4 T3: Right Stick V (-32768 - +32768)
-5 T3: R2 (0-255)
-16 T3: Digital Left/Middle/Right (-1/0/1)
-17 T3: Digital Up/Middle/Down (-1/0/1)
-304 T3: A (0/1)
-305 T3: B (0/1)
-307 T3: X (0/1)
-308 T3: Y (0/1)
-310 T3: L1 (0/1)
-311 T3: R1 (0/1)
-314 T3: Back (0/1)
-315 T3: Start (0/1)
-316 T3: XBox (0/1)
-'''
-
 class PS4Mapping(Mapping):
-    def getBreakButton(self):
-        return [2,3,0,255]
-    def getAccelerateButton(self):
-        return [5,3,0,255]
-    def getDirectionButton(self):
-        return [0,3,0,255]
     
-'''
-"Sony Computer Entertainment Wireless Controller" mapping (Pad Ps4)
-
-0 T3: Left Stick H (0 - 255)
-1 T3: Left Stick V (0 - 255)
-2 T3: L2 (0-255)
-3 T3: Right Stick H (0 - 255)
-4 T3: Right Stick V (0 - 255)
-5 T3: R2 (0-255)
-16 T3: Digital Left/Middle/Right (-1/0/1)
-17 T3: Digital Up/Middle/Down (-1/0/1)
-310 T1: L1
-311 T1: R1
-304 T1: CROSS
-305 T1: CIRCLE
-307 T1: TRIANGLE
-308 T1: SQUARE
-314 T1: SHARE
-315 T1: OPTIONS
-316 T1: PS
-317 T1: THUMB LEFT
-318 T1: THUMB RIGHT
-'''
+    def __init__(self):
+        self.mapping[self.BTN_L1] = [310,1,0,1]
+        self.mapping[self.BTN_L2] = [2,3,0,255]
+        self.mapping[self.BTN_L3] = [317,1,0,1]
+        self.mapping[self.BTN_L3_H] = [0,3,0,255]
+        self.mapping[self.BTN_L3_V] = [1,3,0,255]
+        self.mapping[self.BTN_R1] = [311,1,0,1]
+        self.mapping[self.BTN_R2] = [5,3,0,255]
+        self.mapping[self.BTN_R3] = [318,1,0,1]
+        self.mapping[self.BTN_R3_H] = [3,3,0,255]
+        self.mapping[self.BTN_R3_V] = [4,3,0,255]
+        self.mapping[self.BTN_DPAD_H] = [16,3,-1,1]
+        self.mapping[self.BTN_DPAD_V] = [17,3,-1,1]
+        self.mapping[self.BTN_A] = [304,1,0,1]
+        self.mapping[self.BTN_B] = [305,1,0,1]
+        self.mapping[self.BTN_C] = [308,1,0,1]
+        self.mapping[self.BTN_D] = [307,1,0,1]
+        self.mapping[self.BTN_E] = [314,1,0,1]
+        self.mapping[self.BTN_F] = [315,1,0,1]
+        self.mapping[self.BTN_G] = [316,1,0,1]
+    

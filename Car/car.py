@@ -3,11 +3,13 @@ from time import sleep
 from controller import *
 from mcp4728 import *
 
-displayDebug = False
+displayDebug = True
 
 #mcp = MCP4728()
 #mcp.init()
 controller = Controller()
+previousSpeed = 0
+previousWheel = 0
 if not controller.select():
     print("Controller not compatible")
 else:
@@ -15,6 +17,11 @@ else:
         controller.update(displayDebug)
         speed = controller.getSpeed()
         wheel = controller.getWheel()
-        print("speed",speed,"wheel",wheel)
+        if (previousSpeed != speed):
+            previousSpeed = speed
+            print("speed",speed)
+        if (previousWheel != wheel):
+            previousWheel = wheel
+            print("wheel",wheel)
         #mcp.update(speed, wheel)
         sleep(0.05)
