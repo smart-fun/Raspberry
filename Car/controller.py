@@ -4,13 +4,14 @@
 from devices import selectDevice
 from evdev import InputDevice
 from mapping import *
+import const
 
 class Controller:
     wheel = 50
     speed = 50
     controller = None
-    mapping = None
-    supportedDevices = ["Microsoft X-Box 360 pad", "Sony Computer Entertainment Wireless Controller"]
+    mapp = None
+    supportedDevices = [const.CONTROLLER_XBOX360, const.CONTROLLER_PS4]
     
     def __init__(self):
         wheel = 50
@@ -22,7 +23,7 @@ class Controller:
             return False
         else:
             self.controller = InputDevice(device.path)
-            self.mapping = getMapping(device.name)
+            self.mapp = getMapping(device.name)
             print("using", self.controller)
             return True
 
@@ -30,13 +31,13 @@ class Controller:
         event = self.controller.read_one()
         while(event != None):
             
-            key,value = self.mapping.getNormalizedValue(event.code, event.type, event.value)
+            key,value = self.mapp.getNormalizedValue(event.code, event.type, event.value)
             if (key != None):
-                if (key == "L2"):
+                if (key == const.BTN_L2):
                     self.speed = int(50 + (value / 2))
-                elif (key == "R2"):
+                elif (key == const.BTN_R2):
                     self.speed = int(50 - (value / 2))
-                elif (key == "L3_H"):
+                elif (key == const.BTN_L3_H):
                     self.wheel = int(value)
             
             event = self.controller.read_one()
