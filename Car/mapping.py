@@ -6,6 +6,7 @@ def getMapping(controllerName):
         return XBox360Mapping()
     if controllerName == const.CONTROLLER_PS4:
         return PS4Mapping()
+    return None
 
 class Mapping:
     
@@ -53,13 +54,7 @@ class XBox360Mapping(Mapping):
         self.mapping[const.BTN_F] = [315,1,0,1]
         self.mapping[const.BTN_G] = [316,1,0,1]
     
-    def getBreakButton(self):
-        return [2,3,0,255]
-    def getAccelerateButton(self):
-        return [5,3,0,255]
-    def getDirectionButton(self):
-        return [0,3,-32768,32767]
-    
+   
 class PS4Mapping(Mapping):
     
     def __init__(self):

@@ -13,8 +13,8 @@ class Controller:
     mapp = None
     supportedDevices = [const.CONTROLLER_XBOX360, const.CONTROLLER_PS4]
     
-    def __init__(self):
-        wheel = 50
+    #def __init__(self):
+#        wheel = 50
 
     def select(self):
         device = selectDevice()
