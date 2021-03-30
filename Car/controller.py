@@ -7,14 +7,15 @@ from mapping import *
 import const
 
 class Controller:
-    wheel = 50
-    speed = 50
+    wheel = 50    # Centered
+    speed = 50    # Stopped
     controller = None
-    mapp = None
+    mapping = None
     supportedDevices = [const.CONTROLLER_XBOX360, const.CONTROLLER_PS4]
-    
-    #def __init__(self):
-#        wheel = 50
+    # Button Binding:
+    BUTTON_BREAK = const.BTN_L2
+    BUTTON_ACCELERATE = const.BTN_R2
+    BUTTON_DIRECTION = const.BTN_L3_H
 
     def select(self):
         device = selectDevice()
@@ -23,7 +24,7 @@ class Controller:
             return False
         else:
             self.controller = InputDevice(device.path)
-            self.mapp = getMapping(device.name)
+            self.mapping = getMapping(device.name)
             print("using", self.controller)
             return True
 
@@ -31,13 +32,13 @@ class Controller:
         event = self.controller.read_one()
         while(event != None):
             
-            key,value = self.mapp.getNormalizedValue(event.code, event.type, event.value)
+            key,value = self.mapping.getNormalizedValue(event.code, event.type, event.value)
             if (key != None):
-                if (key == const.BTN_L2):
+                if (key == self.BUTTON_BREAK):
                     self.speed = int(50 + (value / 2))
-                elif (key == const.BTN_R2):
+                elif (key == self.BUTTON_ACCELERATE):
                     self.speed = int(50 - (value / 2))
-                elif (key == const.BTN_L3_H):
+                elif (key == self.BUTTON_DIRECTION):
                     self.wheel = int(value)
             
             event = self.controller.read_one()
