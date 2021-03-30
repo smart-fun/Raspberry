@@ -5,8 +5,8 @@ from mcp4728 import *
 
 displayDebug = True
 
-#mcp = MCP4728()
-#mcp.init()
+mcp = MCP4728()
+mcp.init()
 controller = Controller()
 previousSpeed = 0
 previousWheel = 0
@@ -23,5 +23,5 @@ else:
         if (previousWheel != wheel):
             previousWheel = wheel
             print("wheel",wheel)
-        #mcp.update(speed, wheel)
+        mcp.update(speed, wheel)
         sleep(0.05)
