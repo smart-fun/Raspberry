@@ -17,11 +17,18 @@ else:
         controller.update(displayDebug)
         speed = controller.getSpeed()
         wheel = controller.getWheel()
+        update = False
+
         if (previousSpeed != speed):
             previousSpeed = speed
             print("speed",speed)
+            update = True
         if (previousWheel != wheel):
             previousWheel = wheel
             print("wheel",wheel)
-        mcp.update(speed, wheel)
+            update = True
+
+        if (update):
+            mcp.update(speed, wheel)
+        
         sleep(0.05)
