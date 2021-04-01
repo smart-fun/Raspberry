@@ -19,13 +19,18 @@ def createScreen():
     screen.fill(GREY)
     return screen
 
-def displayCircle(screen, message):
+def displayCircle(screen, message, yellow, red):
     x = SCREEN_WIDTH / 2
     y = SCREEN_HEIGHT / 2
     radius = SCREEN_HEIGHT / 4
     pi = 3.14159
-    pg.draw.circle(screen, RED, [x, y], radius, 0, draw_top_right=True, draw_bottom_right=True)
-    pg.draw.circle(screen, YELLOW, [x, y], radius, 0, draw_top_left=True , draw_bottom_left=True)
+    if (yellow and red):
+        pg.draw.circle(screen, RED, [x, y], radius, 0, draw_top_right=True, draw_bottom_right=True)
+        pg.draw.circle(screen, YELLOW, [x, y], radius, 0, draw_top_left=True , draw_bottom_left=True)
+    elif yellow:
+        pg.draw.circle(screen, YELLOW, [x, y], radius, 0)
+    elif red:
+        pg.draw.circle(screen, RED, [x, y], radius, 0)
     font = pg.font.SysFont(None, 60)
     text = font.render(message, True, BLACK)
     textRect = text.get_rect()
