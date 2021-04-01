@@ -23,8 +23,9 @@ for i in range(24):
     pixels[i] = (r,g,b)
 
 pixels.show()
+sleep(3)
 
-'''
+
 while True:
     
     pixels.fill((0,0,255))
@@ -34,4 +35,3 @@ while True:
     pixels.fill((255,0,0))
     pixels.show()
     sleep(2)
-'''
