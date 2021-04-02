@@ -2,6 +2,8 @@ import pygame as pg
 import pygame_widgets as pw
 from display import *
 from enum import IntEnum
+from jukebox import *
+from time import sleep
 
 class State(IntEnum):
     READY = 1
@@ -15,6 +17,8 @@ scoreRed = 0
 startButton = None
 yesButton = None
 noButton = None
+jukebox = None
+newMusic = True
 
 def goToReady():
     global state
@@ -27,13 +31,22 @@ def goToReady():
     startButton.show()
     yesButton.hide()
     noButton.hide()
-    if ((scoreYellow != 0) or (scoreRed != 0)):
-        displayScore(screen, scoreYellow, scoreRed)
+    displayScore(screen, scoreYellow, scoreRed)
 
 def goToPlaying():
     global state
     global screen
     global startButton
+    global jukebox
+    global newMusic
+    if newMusic:
+        jukebox.stop()
+        jukebox.nextMusic()
+        jukebox.play()
+        newMusic = False
+    else:
+        jukebox.unpause()
+        
     state = State.PLAYING
     print("New State", state)
     startButton.hide()
@@ -45,9 +58,11 @@ def yellowPress():
     global state
     global yesButton
     global noButton
+    global jukebox
     print("Yellow Press!")
     if (state == State.PLAYING):
         state = State.PROPOSING_YELLOW
+        jukebox.pause()
         displayCircle(screen, "CORRECT?", True, False)
         yesButton.show()
         noButton.show()
@@ -56,9 +71,11 @@ def redPress():
     global state
     global yesButton
     global noButton
+    global jukebox
     print("Red Press!")
     if (state == State.PLAYING):
         state = State.PROPOSING_RED
+        jukebox.pause()
         displayCircle(screen, "CORRECT?", False, True)
         yesButton.show()
         noButton.show()
@@ -66,18 +83,24 @@ def redPress():
 def yesPress():
     global scoreYellow
     global scoreRed
+    global jukeBox
+    global newMusic
     print("yes")
     if (state == State.PROPOSING_YELLOW):
         scoreYellow += 1
     else:
         scoreRed += 1
+    jukebox.unpause()
+    newMusic = True
     goToReady()
     
 def noPress():
     goToReady()
 
 pg.init()
+
 screen = createScreen()
+jukebox = Jukebox()
 
 startButton = displayStartButton(screen, lambda: goToPlaying())
 yesButton = displayYesButton(screen, lambda: yesPress())
