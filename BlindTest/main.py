@@ -43,6 +43,8 @@ def goToPlaying():
     global startButton
     global jukebox
     global newMusic
+    global yesButton
+    global newMusic
     if newMusic:
         jukebox.stop()
         jukebox.nextMusic()
@@ -54,6 +56,8 @@ def goToPlaying():
     state = State.PLAYING
     print("New State", state)
     startButton.hide()
+    yesButton.hide()
+    noButton.hide()
     screen.fill(GREY)
     displayCircle(screen, "PLAYING", True, True)
     displayScore(screen, scoreYellow, scoreRed)
@@ -101,7 +105,8 @@ def yesPress():
     goToReady()
     
 def noPress():
-    goToReady()
+    #goToReady()
+    goToPlaying()
 
 pg.init()
 
