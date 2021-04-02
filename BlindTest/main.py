@@ -5,6 +5,7 @@ from enum import IntEnum
 from jukebox import *
 from time import sleep
 from neopixel24 import *
+import RPi.GPIO as GPIO
 
 class State(IntEnum):
     READY = 1
@@ -72,7 +73,7 @@ def goToPlaying():
     title = jukebox.getTitle()
     displayMusicTitle(screen, title)
     
-def yellowPress():
+def yellowPress(channel):
     global state
     global yesButton
     global noButton
@@ -88,7 +89,7 @@ def yellowPress():
         yesButton.show()
         noButton.show()
 
-def redPress():
+def redPress(channel):
     global state
     global yesButton
     global noButton
@@ -120,7 +121,14 @@ def yesPress():
     
 def noPress():
     #goToReady()
+    neopixel.fillColors(NEO_YELLOW, NEO_RED)
     goToPlaying()
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.add_event_detect(22, GPIO.RISING, callback=yellowPress, bouncetime=300)
+GPIO.add_event_detect(27, GPIO.RISING, callback=redPress, bouncetime=300)
 
 pg.init()
 
@@ -142,9 +150,9 @@ while running:
             running = False
         elif event.type == pg.KEYDOWN:
             if (event.unicode == 'y'):
-                yellowPress()
+                yellowPress(None)
             elif (event.unicode == 'r'):
-                redPress()
+                redPress(None)
     
     if (not startButton._hidden):
         startButton.listen(events)
@@ -167,4 +175,5 @@ while running:
     pg.display.update()
 
 neopixel.fillColor((0,0,0))
+GPIO.cleanup()
 pg.quit()
