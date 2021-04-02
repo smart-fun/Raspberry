@@ -25,6 +25,8 @@ def goToReady():
     global screen
     global startButton
     global yesButton
+    global newMusic
+    global jukebox
     state = State.READY
     screen.fill(GREY)
     displayCircle(screen, "READY?", True, True)
@@ -32,6 +34,8 @@ def goToReady():
     yesButton.hide()
     noButton.hide()
     displayScore(screen, scoreYellow, scoreRed)
+    title = jukebox.getTitle()
+    displayMusicTitle(screen, title)
 
 def goToPlaying():
     global state
@@ -53,6 +57,8 @@ def goToPlaying():
     screen.fill(GREY)
     displayCircle(screen, "PLAYING", True, True)
     displayScore(screen, scoreYellow, scoreRed)
+    title = jukebox.getTitle()
+    displayMusicTitle(screen, title)
     
 def yellowPress():
     global state

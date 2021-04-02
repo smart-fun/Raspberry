@@ -108,3 +108,11 @@ def displayScore(screen, yellow, red):
     textRect.centery = screen.get_rect().centery
     screen.blit(text,textRect)
 
+def displayMusicTitle(screen, title):
+    font = pg.font.SysFont(None, 30)
+    text = font.render(str(title), True, BLACK)
+    textRect = text.get_rect()
+    textRect.centerx = SCREEN_WIDTH * 0.5
+    textRect.centery = SCREEN_HEIGHT * 0.1
+    screen.blit(text,textRect)
+    

@@ -50,8 +50,9 @@ class Jukebox:
     def isPlaying(self):
         return pygame.mixer.music.get_busy()
 
-'''
-jukebox = Jukebox()
-jukebox.nextMusic()
-jukebox.play()
-'''
+    def getTitle(self):
+        if self.currentMusic != None:
+            return self.currentMusic[0:len(self.currentMusic) - 4]
+        else:
+            return ""
+        
