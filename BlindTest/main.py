@@ -4,13 +4,16 @@ from display import *
 from enum import IntEnum
 from jukebox import *
 from time import sleep
+from neopixel24 import *
 
 class State(IntEnum):
     READY = 1
     PLAYING = 2
     PROPOSING_RED = 3
     PROPOSING_YELLOW = 4
-
+    
+NEO_YELLOW = (255,255,0)
+NEO_RED = (255,0,0)
 state = State.READY
 scoreYellow = 0
 scoreRed = 0
@@ -19,6 +22,7 @@ yesButton = None
 noButton = None
 jukebox = None
 newMusic = True
+neopixel = NeoPixel24()
 
 def goToReady():
     global state
@@ -27,6 +31,9 @@ def goToReady():
     global yesButton
     global newMusic
     global jukebox
+    global neopixel
+    global NEO_YELLOW
+    global NEO_RED
     state = State.READY
     screen.fill(GREY)
     displayCircle(screen, "READY?", True, True)
@@ -36,6 +43,7 @@ def goToReady():
     displayScore(screen, scoreYellow, scoreRed)
     title = jukebox.getTitle()
     displayMusicTitle(screen, title)
+    neopixel.fillColors(NEO_YELLOW, NEO_RED)
 
 def goToPlaying():
     global state
@@ -69,9 +77,12 @@ def yellowPress():
     global yesButton
     global noButton
     global jukebox
+    global neopixel
+    global NEO_YELLOW
     print("Yellow Press!")
     if (state == State.PLAYING):
         state = State.PROPOSING_YELLOW
+        neopixel.fillColor(NEO_YELLOW)
         jukebox.pause()
         displayCircle(screen, "CORRECT?", True, False)
         yesButton.show()
@@ -82,9 +93,12 @@ def redPress():
     global yesButton
     global noButton
     global jukebox
+    global neopixel
+    global NEO_RED
     print("Red Press!")
     if (state == State.PLAYING):
         state = State.PROPOSING_RED
+        neopixel.fillColor(NEO_RED)
         jukebox.pause()
         displayCircle(screen, "CORRECT?", False, True)
         yesButton.show()
@@ -120,6 +134,7 @@ noButton = displayNoButton(screen, lambda: noPress())
 goToReady()
 
 running = True
+neocounter = 0
 while running:
     events = pg.event.get()
     for event in events:
@@ -142,7 +157,14 @@ while running:
     if (not noButton._hidden):
         noButton.listen(events)
         noButton.draw()
+        
+    neocounter += 1
+    if (neocounter > 50):
+        if (state == State.PLAYING):
+            neocounter = 0
+            neopixel.rotate()
 
     pg.display.update()
 
+neopixel.fillColor((0,0,0))
 pg.quit()
