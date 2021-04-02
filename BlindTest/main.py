@@ -10,8 +10,27 @@ class State(IntEnum):
     PROPOSING_YELLOW = 4
 
 state = State.READY
+scoreYellow = 0
+scoreRed = 0
+startButton = None
+yesButton = None
+noButton = None
 
-def startGame():
+def goToReady():
+    global state
+    global screen
+    global startButton
+    global yesButton
+    state = State.READY
+    screen.fill(GREY)
+    displayCircle(screen, "READY?", True, True)
+    startButton.show()
+    yesButton.hide()
+    noButton.hide()
+    if ((scoreYellow != 0) or (scoreRed != 0)):
+        displayScore(screen, scoreYellow, scoreRed)
+
+def goToPlaying():
     global state
     global screen
     global startButton
@@ -20,23 +39,51 @@ def startGame():
     startButton.hide()
     screen.fill(GREY)
     displayCircle(screen, "PLAYING", True, True)
+    displayScore(screen, scoreYellow, scoreRed)
     
 def yellowPress():
     global state
+    global yesButton
+    global noButton
     print("Yellow Press!")
     if (state == State.PLAYING):
         state = State.PROPOSING_YELLOW
         displayCircle(screen, "CORRECT?", True, False)
+        yesButton.show()
+        noButton.show()
 
 def redPress():
+    global state
+    global yesButton
+    global noButton
     print("Red Press!")
+    if (state == State.PLAYING):
+        state = State.PROPOSING_RED
+        displayCircle(screen, "CORRECT?", False, True)
+        yesButton.show()
+        noButton.show()
+    
+def yesPress():
+    global scoreYellow
+    global scoreRed
+    print("yes")
+    if (state == State.PROPOSING_YELLOW):
+        scoreYellow += 1
+    else:
+        scoreRed += 1
+    goToReady()
+    
+def noPress():
+    goToReady()
 
 pg.init()
 screen = createScreen()
 
-displayCircle(screen, "READY?", True, True)
+startButton = displayStartButton(screen, lambda: goToPlaying())
+yesButton = displayYesButton(screen, lambda: yesPress())
+noButton = displayNoButton(screen, lambda: noPress())
 
-startButton = displayStartButton(screen, lambda: startGame())
+goToReady()
 
 running = True
 while running:
@@ -50,10 +97,18 @@ while running:
             elif (event.unicode == 'r'):
                 redPress()
     
-    if (state == State.READY):
+    if (not startButton._hidden):
         startButton.listen(events)
         startButton.draw()
-        
+
+    if (not yesButton._hidden):
+        yesButton.listen(events)
+        yesButton.draw()
+
+    if (not noButton._hidden):
+        noButton.listen(events)
+        noButton.draw()
+
     pg.display.update()
 
 pg.quit()
