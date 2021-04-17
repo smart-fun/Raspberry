@@ -24,7 +24,6 @@ def displayCircle(screen, message, yellow, red):
     x = SCREEN_WIDTH / 2
     y = SCREEN_HEIGHT / 2
     radius = SCREEN_HEIGHT / 4
-    pi = 3.14159
     if (yellow and red):
         pg.draw.circle(screen, RED, [x, y], radius, 0, draw_top_right=True, draw_bottom_right=True)
         pg.draw.circle(screen, YELLOW, [x, y], radius, 0, draw_top_left=True , draw_bottom_left=True)
@@ -124,6 +123,23 @@ def displayDecRedButton(screen, callback):
     x = SCREEN_WIDTH - 40 - 20
     y = SCREEN_HEIGHT * 0.5
     return createRoundButton(screen, callback, x, y, "-", RED)
+
+def createSkipButton(screen, callback):
+    width = 100
+    height = 40
+    x = (SCREEN_WIDTH - width) * 0.5
+    y = SCREEN_HEIGHT - 50 - 10
+    button = pw.Button(
+        screen, x, y, width, height, text="SKIP",
+        fontSize=30,
+        textColour=(255,255,255),
+        inactiveColour=BUTTON_COLOR,
+        hoverColour=BUTTON_HOVER_COLOR,
+        pressedColour=BUTTON_PRESS_COLOR,
+        radius=20,
+        onClick=callback
+     )
+    return button
 
 def displayScore(screen, yellow, red):
     font = pg.font.SysFont(None, 100)

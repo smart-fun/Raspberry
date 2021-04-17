@@ -26,6 +26,7 @@ incYellowButton = None
 decYellowButton = None
 incRedButton = None
 decRedButton = None
+skipButton = None
 jukebox = None
 newMusic = True
 neopixel = NeoPixel24()
@@ -34,6 +35,7 @@ def goToReady():
     global state
     global startButton
     global yesButton
+    global skipButton
     global neopixel
     global NEO_YELLOW
     global NEO_RED
@@ -42,6 +44,7 @@ def goToReady():
     startButton.show()
     yesButton.hide()
     noButton.hide()
+    skipButton.hide()
     neopixel.fillColors(NEO_YELLOW, NEO_RED)
 
 def goToPlaying():
@@ -51,6 +54,7 @@ def goToPlaying():
     global newMusic
     global yesButton
     global noButton
+    global skipButton
     if newMusic:
         jukebox.stop()
         jukebox.nextMusic()
@@ -64,6 +68,7 @@ def goToPlaying():
     startButton.hide()
     yesButton.hide()
     noButton.hide()
+    skipButton.show()
     
 def yellowPress(channel):
     global state
@@ -80,6 +85,7 @@ def yellowPress(channel):
         refreshScreen()
         yesButton.show()
         noButton.show()
+        skipButton.hide()
 
 def redPress(channel):
     global state
@@ -96,6 +102,7 @@ def redPress(channel):
         refreshScreen()
         yesButton.show()
         noButton.show()
+        skipButton.hide()
     
 def yesPress():
     global scoreYellow
@@ -107,7 +114,7 @@ def yesPress():
         scoreYellow += 1
     else:
         scoreRed += 1
-    jukebox.unpause()
+    #jukebox.unpause()
     newMusic = True
     goToReady()
     
@@ -116,6 +123,15 @@ def noPress():
     #goToReady()
     neopixel.fillColors(NEO_YELLOW, NEO_RED)
     goToPlaying()
+    
+def skipMusic():
+    global neopixel
+    global jukebox
+    global newMusic
+    neopixel.fillColors(NEO_YELLOW, NEO_RED)
+    jukebox.pause()
+    newMusic = True
+    goToReady()
     
 def incYellow():
     global scoreYellow
@@ -146,9 +162,6 @@ def refreshScreen():
         displayCircle(screen, "CORRECT?", False, True)
     elif (state == State.PROPOSING_YELLOW):
         displayCircle(screen, "CORRECT?", True, False)
-    else:
-        displayCircle(screen, "DONT'T KNOW", True, True)
-    
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -168,6 +181,7 @@ incYellowButton = displayIncYellowButton(screen, lambda: incYellow())
 decYellowButton = displayDecYellowButton(screen, lambda: decYellow())
 incRedButton = displayIncRedButton(screen, lambda: incRed())
 decRedButton = displayDecRedButton(screen, lambda: decRed())
+skipButton = createSkipButton(screen, lambda: skipMusic())
 
 goToReady()
 
@@ -195,6 +209,10 @@ while running:
     if (not noButton._hidden):
         noButton.listen(events)
         noButton.draw()
+        
+    if (not skipButton._hidden):
+        skipButton.listen(events)
+        skipButton.draw()
         
     incYellowButton.draw()
     incYellowButton.listen(events)
