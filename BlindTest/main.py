@@ -230,6 +230,7 @@ while running:
             neopixel.rotate()
 
     pg.display.update()
+    simulateNeoPixel(screen, neopixel)
 
 neopixel.fillColor((0,0,0))
 GPIO.cleanup()

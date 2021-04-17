@@ -1,5 +1,6 @@
 import pygame as pg
 import pygame_widgets as pw
+from math import sin, cos
 
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
@@ -31,12 +32,22 @@ def displayCircle(screen, message, yellow, red):
         pg.draw.circle(screen, YELLOW, [x, y], radius, 0)
     elif red:
         pg.draw.circle(screen, RED, [x, y], radius, 0)
-    font = pg.font.SysFont(None, 60)
+    font = pg.font.SysFont(None, 40)
     text = font.render(message, True, BLACK)
     textRect = text.get_rect()
     textRect.centerx = screen.get_rect().centerx
     textRect.centery = screen.get_rect().centery
     screen.blit(text,textRect)
+    
+def simulateNeoPixel(screen, neopixel):
+    size = 10
+    radius = 100
+    angle = 0
+    for color in neopixel.pixels:
+        x = int((SCREEN_WIDTH / 2) + radius*cos(angle))
+        y = int((SCREEN_HEIGHT / 2) - radius*sin(angle))
+        pg.draw.circle(screen, color, [x, y], size, 0)
+        angle += 3.14159 / 12
 
 def displayStartButton(screen, callback):
     width = 200
@@ -160,7 +171,7 @@ def displayMusicTitle(screen, title):
     font = pg.font.SysFont(None, 30)
     text = font.render(str(title), True, BLACK)
     textRect = text.get_rect()
-    textRect.centerx = SCREEN_WIDTH * 0.5
-    textRect.centery = SCREEN_HEIGHT * 0.1
+    textRect.centerx = int(SCREEN_WIDTH * 0.5)
+    textRect.centery = int(SCREEN_HEIGHT * 0.1)
     screen.blit(text,textRect)
     
