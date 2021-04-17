@@ -47,7 +47,6 @@ def displayStartButton(screen, callback):
     button = pw.Button(
         screen, x, y, width, height, text='START',
         fontSize=50,
-        margin=10,
         textColour=(255,255,255),
         inactiveColour=BUTTON_COLOR,
         hoverColour=BUTTON_HOVER_COLOR,
@@ -65,7 +64,6 @@ def displayYesButton(screen, callback):
     button = pw.Button(
         screen, x, y, width, height, text='YES',
         fontSize=50,
-        margin=10,
         textColour=(255,255,255),
         inactiveColour=BUTTON_COLOR,
         hoverColour=BUTTON_HOVER_COLOR,
@@ -83,7 +81,6 @@ def displayNoButton(screen, callback):
     button = pw.Button(
         screen, x, y, width, height, text='NO',
         fontSize=50,
-        margin=10,
         textColour=(255,255,255),
         inactiveColour=BUTTON_COLOR,
         hoverColour=BUTTON_HOVER_COLOR,
@@ -92,6 +89,41 @@ def displayNoButton(screen, callback):
         onClick=callback
      )
     return button
+
+def createRoundButton(screen, callback, x, y, text, color):
+    width = 40
+    height = 40
+    button = pw.Button(
+        screen, x, y, width, height, text=text,
+        fontSize=60,
+        textColour=(255,255,255),
+        inactiveColour=color,
+        hoverColour=color,
+        pressedColour=color,
+        radius=20,
+        onClick=callback
+     )
+    return button
+
+def displayIncYellowButton(screen, callback):
+    x = 20
+    y = SCREEN_HEIGHT * 0.4
+    return createRoundButton(screen, callback, x, y, "+", YELLOW)
+
+def displayDecYellowButton(screen, callback):
+    x = 20
+    y = SCREEN_HEIGHT * 0.5
+    return createRoundButton(screen, callback, x, y, "-", YELLOW)
+
+def displayIncRedButton(screen, callback):
+    x = SCREEN_WIDTH - 40 - 20
+    y = SCREEN_HEIGHT * 0.4
+    return createRoundButton(screen, callback, x, y, "+", RED)
+
+def displayDecRedButton(screen, callback):
+    x = SCREEN_WIDTH - 40 - 20
+    y = SCREEN_HEIGHT * 0.5
+    return createRoundButton(screen, callback, x, y, "-", RED)
 
 def displayScore(screen, yellow, red):
     font = pg.font.SysFont(None, 100)

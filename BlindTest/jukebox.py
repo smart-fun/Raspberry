@@ -2,7 +2,7 @@ import pygame
 import os
 import random
 
-MUSIC_FOLDER = "/home/pi/Downloads/"
+MUSIC_FOLDER = "/home/pi/Music/"
 
 class Jukebox:
     currentMusic = None
@@ -23,11 +23,13 @@ class Jukebox:
     def nextMusic(self):
         if len(self.allMusics) == 0:
             self.findAllMusics()
+        if (self.currentMusic != None):
+            pygame.mixer.music.unload()
         size = len(self.allMusics)
         index = random.randint(0, size-1)
         self.currentMusic = self.allMusics[index]
         self.allMusics.remove(self.currentMusic)
-        print("Selected Music:", self.currentMusic)
+        print('Selected Music: "' + self.currentMusic + '", Remaining:', str(size - 1))
         pygame.mixer.music.load(MUSIC_FOLDER + self.currentMusic)
 
     def stop(self):

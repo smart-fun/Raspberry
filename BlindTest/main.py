@@ -21,39 +21,36 @@ scoreRed = 0
 startButton = None
 yesButton = None
 noButton = None
+skipButton = None
+incYellowButton = None
+decYellowButton = None
+incRedButton = None
+decRedButton = None
 jukebox = None
 newMusic = True
 neopixel = NeoPixel24()
 
 def goToReady():
     global state
-    global screen
     global startButton
     global yesButton
-    global newMusic
-    global jukebox
     global neopixel
     global NEO_YELLOW
     global NEO_RED
     state = State.READY
-    screen.fill(GREY)
-    displayCircle(screen, "READY?", True, True)
+    refreshScreen()
     startButton.show()
     yesButton.hide()
     noButton.hide()
-    displayScore(screen, scoreYellow, scoreRed)
-    title = jukebox.getTitle()
-    displayMusicTitle(screen, title)
     neopixel.fillColors(NEO_YELLOW, NEO_RED)
 
 def goToPlaying():
     global state
-    global screen
     global startButton
     global jukebox
     global newMusic
     global yesButton
-    global newMusic
+    global noButton
     if newMusic:
         jukebox.stop()
         jukebox.nextMusic()
@@ -63,15 +60,10 @@ def goToPlaying():
         jukebox.unpause()
         
     state = State.PLAYING
-    print("New State", state)
+    refreshScreen()
     startButton.hide()
     yesButton.hide()
     noButton.hide()
-    screen.fill(GREY)
-    displayCircle(screen, "PLAYING", True, True)
-    displayScore(screen, scoreYellow, scoreRed)
-    title = jukebox.getTitle()
-    displayMusicTitle(screen, title)
     
 def yellowPress(channel):
     global state
@@ -85,7 +77,7 @@ def yellowPress(channel):
         state = State.PROPOSING_YELLOW
         neopixel.fillColor(NEO_YELLOW)
         jukebox.pause()
-        displayCircle(screen, "CORRECT?", True, False)
+        refreshScreen()
         yesButton.show()
         noButton.show()
 
@@ -101,7 +93,7 @@ def redPress(channel):
         state = State.PROPOSING_RED
         neopixel.fillColor(NEO_RED)
         jukebox.pause()
-        displayCircle(screen, "CORRECT?", False, True)
+        refreshScreen()
         yesButton.show()
         noButton.show()
     
@@ -120,9 +112,43 @@ def yesPress():
     goToReady()
     
 def noPress():
+    global neopixel
     #goToReady()
     neopixel.fillColors(NEO_YELLOW, NEO_RED)
     goToPlaying()
+    
+def incYellow():
+    global scoreYellow
+    scoreYellow += 1
+    refreshScreen()
+def decYellow():
+    global scoreYellow
+    scoreYellow -= 1
+    refreshScreen()
+def incRed():
+    global scoreRed
+    scoreRed += 1
+    refreshScreen()
+def decRed():
+    global scoreRed
+    scoreRed -= 1
+    refreshScreen()
+    
+def refreshScreen():
+    screen.fill(GREY)
+    displayScore(screen, scoreYellow, scoreRed)
+    displayMusicTitle(screen, jukebox.getTitle())
+    if (state == State.PLAYING):
+        displayCircle(screen, "PLAYING", True, True)
+    elif (state == State.READY):
+        displayCircle(screen, "READY?", True, True)
+    elif (state == State.PROPOSING_RED):
+        displayCircle(screen, "CORRECT?", False, True)
+    elif (state == State.PROPOSING_YELLOW):
+        displayCircle(screen, "CORRECT?", True, False)
+    else:
+        displayCircle(screen, "DONT'T KNOW", True, True)
+    
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -138,6 +164,10 @@ jukebox = Jukebox()
 startButton = displayStartButton(screen, lambda: goToPlaying())
 yesButton = displayYesButton(screen, lambda: yesPress())
 noButton = displayNoButton(screen, lambda: noPress())
+incYellowButton = displayIncYellowButton(screen, lambda: incYellow())
+decYellowButton = displayDecYellowButton(screen, lambda: decYellow())
+incRedButton = displayIncRedButton(screen, lambda: incRed())
+decRedButton = displayDecRedButton(screen, lambda: decRed())
 
 goToReady()
 
@@ -165,6 +195,15 @@ while running:
     if (not noButton._hidden):
         noButton.listen(events)
         noButton.draw()
+        
+    incYellowButton.draw()
+    incYellowButton.listen(events)
+    decYellowButton.draw()
+    decYellowButton.listen(events)
+    incRedButton.draw()
+    incRedButton.listen(events)
+    decRedButton.draw()
+    decRedButton.listen(events)
         
     neocounter += 1
     if (neocounter > 50):
