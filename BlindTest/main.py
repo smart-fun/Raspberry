@@ -26,10 +26,11 @@ incYellowButton = None
 decYellowButton = None
 incRedButton = None
 decRedButton = None
-skipButton = None
 jukebox = None
 newMusic = True
 neopixel = NeoPixel24()
+PinRed = 5
+PinYellow = 6
 
 def goToReady():
     global state
@@ -40,11 +41,11 @@ def goToReady():
     global NEO_YELLOW
     global NEO_RED
     state = State.READY
-    refreshScreen()
     startButton.show()
     yesButton.hide()
     noButton.hide()
     skipButton.hide()
+    refreshScreen()
     neopixel.fillColors(NEO_YELLOW, NEO_RED)
 
 def goToPlaying():
@@ -64,11 +65,11 @@ def goToPlaying():
         jukebox.unpause()
         
     state = State.PLAYING
-    refreshScreen()
     startButton.hide()
     yesButton.hide()
     noButton.hide()
     skipButton.show()
+    refreshScreen()
     
 def yellowPress(channel):
     global state
@@ -77,15 +78,16 @@ def yellowPress(channel):
     global jukebox
     global neopixel
     global NEO_YELLOW
+    global skipButton
     print("Yellow Press!")
     if (state == State.PLAYING):
         state = State.PROPOSING_YELLOW
         neopixel.fillColor(NEO_YELLOW)
         jukebox.pause()
-        refreshScreen()
         yesButton.show()
         noButton.show()
         skipButton.hide()
+        refreshScreen()
 
 def redPress(channel):
     global state
@@ -94,15 +96,16 @@ def redPress(channel):
     global jukebox
     global neopixel
     global NEO_RED
+    global skipButton
     print("Red Press!")
     if (state == State.PLAYING):
         state = State.PROPOSING_RED
         neopixel.fillColor(NEO_RED)
         jukebox.pause()
-        refreshScreen()
         yesButton.show()
         noButton.show()
         skipButton.hide()
+        refreshScreen()
     
 def yesPress():
     global scoreYellow
@@ -114,13 +117,11 @@ def yesPress():
         scoreYellow += 1
     else:
         scoreRed += 1
-    #jukebox.unpause()
     newMusic = True
     goToReady()
     
 def noPress():
     global neopixel
-    #goToReady()
     neopixel.fillColors(NEO_YELLOW, NEO_RED)
     goToPlaying()
     
@@ -164,10 +165,10 @@ def refreshScreen():
         displayCircle(screen, "CORRECT?", True, False)
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(22, GPIO.RISING, callback=yellowPress, bouncetime=300)
-GPIO.add_event_detect(27, GPIO.RISING, callback=redPress, bouncetime=300)
+GPIO.setup(PinYellow, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(PinRed, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.add_event_detect(PinYellow, GPIO.RISING, callback=yellowPress, bouncetime=300)
+GPIO.add_event_detect(PinRed, GPIO.RISING, callback=redPress, bouncetime=300)
 
 pg.init()
 
