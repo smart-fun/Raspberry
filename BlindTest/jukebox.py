@@ -11,13 +11,14 @@ class Jukebox:
     
     def __init__(self):
         pygame.mixer.init()
+        pygame.mixer.set_num_channels(2)
         pygame.mixer.music.set_volume(1.0)
     
     def findAllMusics(self):
         self.allMusics = []
         listdir = os.listdir(MUSIC_FOLDER)
         for name in listdir:
-            if name.endswith(".mp3"):
+            if name.endswith(".mp3") or name.endswith(".ogg"):
                 self.allMusics.append(name)
         
     def nextMusic(self):
