@@ -8,6 +8,7 @@ from time import sleep
 from display88 import *
 import RPi.GPIO as GPIO
 from png import *
+from animation import *
 
 class State(IntEnum):
     READY = 1
@@ -35,6 +36,8 @@ PinRed = 5
 PinYellow = 6
 display88 = Display88()
 png = Png()
+leftAnim = LeftAnimation(png.getGhost(), png.getHeart())
+rightAnim = RightAnimation(png.getPacman(), png.getSun())
 
 def goToReady():
     global state
@@ -92,6 +95,7 @@ def yellowPress(channel):
         noButton.show()
         skipButton.hide()
         refreshScreen()
+        display88.drawRectangleYellow()
 
 def redPress(channel):
     global state
@@ -110,6 +114,8 @@ def redPress(channel):
         noButton.show()
         skipButton.hide()
         refreshScreen()
+        display88.drawRectangleRed()
+
     
 def yesPress():
     global scoreYellow
@@ -158,9 +164,7 @@ def decRed():
 def refreshScreen():
     global display88
     screen.fill(GREY)
-    #display88.drawScore(scoreRed, scoreYellow)
-    
-    display88.drawImages(png.getGhost(), png.getPacman())
+    display88.drawScore(scoreRed, scoreYellow)
     
     displayScore(screen, scoreYellow, scoreRed)
     displayMusicTitle(screen, jukebox.getTitle())
@@ -239,9 +243,18 @@ while running:
             neocounter = 0
             #neopixel.rotate()
 
+    if (state == State.PLAYING):
+        change1 = leftAnim.frameChanged()
+        change2 = rightAnim.frameChanged()
+        if (change1 or change2):
+            leftFrame = leftAnim.getCurrentFrame()
+            rightFrame = rightAnim.getCurrentFrame()
+            display88.drawImages(leftFrame, rightFrame)
+
     pg.display.update()
     #simulateNeoPixel(screen, neopixel)
 
 #neopixel.fillColor((0,0,0))
+display88.hide()
 GPIO.cleanup()
 pg.quit()

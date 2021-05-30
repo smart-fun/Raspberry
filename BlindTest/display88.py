@@ -13,6 +13,7 @@ class Display88:
     def __init__(self):
         serial = spi(port=0, device=0, gpio=noop())
         self.device = max7219(serial, width=16, height=8)
+        self.device.contrast(50)
 
     def drawScore(self, scoreRed, scoreYellow):
         with canvas(self.device) as draw:
@@ -30,4 +31,15 @@ class Display88:
                 point = image[x + (y*8)]
                 if point[0] != 0:
                     draw.point((x + offset,y), "white")
+
+    def drawRectangleYellow(self):
+        with canvas(self.device) as draw:
+            draw.rectangle(((8,0),(15,7)),"white")
+            
+    def drawRectangleRed(self):
+        with canvas(self.device) as draw:
+            draw.rectangle(((0,0),(7,7)),"white")
+    
+    def hide(self):
+        self.device.hide()
                     
