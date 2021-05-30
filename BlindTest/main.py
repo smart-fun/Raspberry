@@ -7,6 +7,7 @@ from time import sleep
 #from neopixel24 import *
 from display88 import *
 import RPi.GPIO as GPIO
+from png import *
 
 class State(IntEnum):
     READY = 1
@@ -33,6 +34,7 @@ newMusic = True
 PinRed = 5
 PinYellow = 6
 display88 = Display88()
+png = Png()
 
 def goToReady():
     global state
@@ -156,7 +158,10 @@ def decRed():
 def refreshScreen():
     global display88
     screen.fill(GREY)
-    display88.drawScore(scoreRed, scoreYellow)
+    #display88.drawScore(scoreRed, scoreYellow)
+    
+    display88.drawImages(png.getGhost(), png.getPacman())
+    
     displayScore(screen, scoreYellow, scoreRed)
     displayMusicTitle(screen, jukebox.getTitle())
     if (state == State.PLAYING):

@@ -19,3 +19,15 @@ class Display88:
             draw.text((1, -1), str(scoreRed), fill="white")
             draw.text((9, -1), str(scoreYellow), fill="white")
  
+    def drawImages(self, imageRed, imageYellow):
+        with canvas(self.device) as draw:
+            self.drawImage(draw, imageRed, 0)
+            self.drawImage(draw, imageYellow, 8)
+ 
+    def drawImage(self, draw, image, offset):
+        for y in range(8):
+            for x in range(8):
+                point = image[x + (y*8)]
+                if point[0] != 0:
+                    draw.point((x + offset,y), "white")
+                    
