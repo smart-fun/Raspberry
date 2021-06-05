@@ -10,6 +10,8 @@ class Png:
     sun2 = None
     heart = None
     heart2 = None
+    unicorn = None
+    cat = None
     
     def __init__(self):
         self.pacman = list(Image.open(r"pacman.png").getdata())
@@ -20,6 +22,8 @@ class Png:
         self.sun2 = list(Image.open(r"sun2.png").getdata())
         self.heart = list(Image.open(r"heart.png").getdata())
         self.heart2 = list(Image.open(r"heart2.png").getdata())
+        self.unicorn = list(Image.open(r"unicorn.png").getdata())
+        self.cat = list(Image.open(r"cat.png").getdata())
 
     def getPacman(self):
         return self.pacman
@@ -45,3 +49,8 @@ class Png:
     def getHeart2(self):
         return self.heart2
 
+    def getUnicorn(self):
+        return self.unicorn
+    
+    def getCat(self):
+        return self.cat

@@ -36,8 +36,8 @@ PinRed = 5
 PinYellow = 6
 display88 = Display88()
 png = Png()
-leftAnim = LeftAnimation(png.getGhost(), png.getHeart())
-rightAnim = RightAnimation(png.getPacman(), png.getSun())
+leftAnim = LeftAnimation(png.getGhost(), png.getHeart(), png.getUnicorn())
+rightAnim = RightAnimation(png.getPacman(), png.getSun(), png.getCat())
 
 def goToReady():
     global state

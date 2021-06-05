@@ -6,7 +6,8 @@ class Animation:
     frames = None
     
     def __init__(self):
-        pass
+        self.index
+        self.frame = self.frames[self.index][self.OFFSET_NUM_FRAMES]
 
     def frameChanged(self):
         self.frame = self.frame - 1
@@ -23,12 +24,12 @@ class Animation:
 
 class LeftAnimation(Animation):
     
-    def __init__(self, frame1, frame2):
+    def __init__(self, frame1, frame2, frame3):
+        self.frames = ((50, frame1), (100, frame2), (100, frame3), (50, frame1))
         super().__init__()
-        self.frames = ((50, frame1), (100, frame2), (50, frame1))
 
 class RightAnimation(Animation):
     
-    def __init__(self, frame1, frame2):
+    def __init__(self, frame1, frame2, frame3):
+        self.frames = ((100, frame1), (100, frame2), (100, frame3))
         super().__init__()
-        self.frames = ((100, frame1), (100, frame2))
