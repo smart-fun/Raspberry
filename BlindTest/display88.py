@@ -22,8 +22,10 @@ class Display88:
  
     def drawImages(self, imageRed, imageYellow):
         with canvas(self.device) as draw:
-            self.drawImage(draw, imageRed, 0)
-            self.drawImage(draw, imageYellow, 8)
+            if (imageRed != None):
+                self.drawImage(draw, imageRed, 0)
+            if (imageYellow != None):
+                self.drawImage(draw, imageYellow, 8)
  
     def drawImage(self, draw, image, offset):
         for y in range(8):

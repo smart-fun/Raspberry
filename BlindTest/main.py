@@ -36,8 +36,12 @@ PinRed = 5
 PinYellow = 6
 display88 = Display88()
 png = Png()
-leftAnim = LeftAnimation(png.getGhost(), png.getHeart(), png.getUnicorn())
-rightAnim = RightAnimation(png.getPacman(), png.getSun(), png.getCat())
+allIcons = [png.getGhost(), png.getPacman(), png.getHeart(), png.getSun(), png.getUnicorn(), png.getCat()]
+leftIconIndex = 0
+rightIconIndex = 1
+iconsChosen = False
+#leftAnim = LeftAnimation(png.getGhost(), png.getHeart(), png.getUnicorn())
+#rightAnim = RightAnimation(png.getPacman(), png.getSun(), png.getCat())
 
 def goToReady():
     global state
@@ -63,6 +67,8 @@ def goToPlaying():
     global yesButton
     global noButton
     global skipButton
+    global iconsChosen
+    iconsChosen = True
     if newMusic:
         jukebox.stop()
         jukebox.nextMusic()
@@ -86,7 +92,15 @@ def yellowPress(channel):
     #global neopixel
     global NEO_YELLOW
     global skipButton
+    global rightIconIndex
+    global allIcons
     print("Yellow Press!")
+    if (state == State.READY) and not iconsChosen:
+        rightIconIndex = rightIconIndex + 1
+        if (rightIconIndex >= len(allIcons)):
+            rightIconIndex = 0
+        display88.drawImages(allIcons[leftIconIndex], allIcons[rightIconIndex])
+        
     if (state == State.PLAYING):
         state = State.PROPOSING_YELLOW
         #neopixel.fillColor(NEO_YELLOW)
@@ -95,7 +109,8 @@ def yellowPress(channel):
         noButton.show()
         skipButton.hide()
         refreshScreen()
-        display88.drawRectangleYellow()
+        #display88.drawRectangleYellow()
+        display88.drawImages(None, allIcons[rightIconIndex])
 
 def redPress(channel):
     global state
@@ -105,7 +120,16 @@ def redPress(channel):
     #global neopixel
     global NEO_RED
     global skipButton
+    global skipButton
+    global leftIconIndex
+    global allIcons
     print("Red Press!")
+    if (state == State.READY) and not iconsChosen:
+        leftIconIndex = leftIconIndex + 1
+        if (leftIconIndex >= len(allIcons)):
+            leftIconIndex = 0
+        display88.drawImages(allIcons[leftIconIndex], allIcons[rightIconIndex])
+
     if (state == State.PLAYING):
         state = State.PROPOSING_RED
         #neopixel.fillColor(NEO_RED)
@@ -114,7 +138,8 @@ def redPress(channel):
         noButton.show()
         skipButton.hide()
         refreshScreen()
-        display88.drawRectangleRed()
+        #display88.drawRectangleRed()
+        display88.drawImages(allIcons[leftIconIndex], None)
 
     
 def yesPress():
@@ -164,7 +189,10 @@ def decRed():
 def refreshScreen():
     global display88
     screen.fill(GREY)
-    display88.drawScore(scoreRed, scoreYellow)
+    if iconsChosen:
+        display88.drawScore(scoreRed, scoreYellow)
+    else:
+        display88.drawImages(allIcons[leftIconIndex], allIcons[rightIconIndex])
     
     displayScore(screen, scoreYellow, scoreRed)
     displayMusicTitle(screen, jukebox.getTitle())
@@ -243,13 +271,13 @@ while running:
             neocounter = 0
             #neopixel.rotate()
 
-    if (state == State.PLAYING):
-        change1 = leftAnim.frameChanged()
-        change2 = rightAnim.frameChanged()
-        if (change1 or change2):
-            leftFrame = leftAnim.getCurrentFrame()
-            rightFrame = rightAnim.getCurrentFrame()
-            display88.drawImages(leftFrame, rightFrame)
+#    if (state == State.PLAYING):
+#        change1 = leftAnim.frameChanged()
+#        change2 = rightAnim.frameChanged()
+#        if (change1 or change2):
+#            leftFrame = leftAnim.getCurrentFrame()
+#            rightFrame = rightAnim.getCurrentFrame()
+#            display88.drawImages(leftFrame, rightFrame)
 
     pg.display.update()
     #simulateNeoPixel(screen, neopixel)
